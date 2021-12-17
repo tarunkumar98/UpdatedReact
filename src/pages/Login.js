@@ -5,12 +5,12 @@ import { Button, Form } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
 
 import { useDispatch } from "react-redux";
-import { authActions } from "../store/auth-slice";
 import { LOGIN_USER } from "../utils/graphql";
+import { signInStart, signInSuccess } from "../redux/user/user.actions";
 
 const Login = (props) => {
     const history = useHistory();
-    const dispatchFn = useDispatch();
+    const dispatch = useDispatch();
     const [errors, setErrors] = useState({});
 
     const {
@@ -25,7 +25,7 @@ const Login = (props) => {
     });
 
     const loginHandler = (userData) => {
-        dispatchFn(authActions.login(userData));
+        dispatch(signInStart(userData));
     };
 
     const [loginUser, { loading }] = useMutation(LOGIN_USER, {

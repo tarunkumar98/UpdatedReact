@@ -5,9 +5,9 @@ import { useMutation } from "@apollo/client";
 import MyPopup from "./MyPopup";
 import { LIKE_POST_MUTATION } from "../utils/graphql";
 
-const LikeButton = ({ user, post: { id, likes, likesCount } }) => {
+const LikeButton = ({ user, post}) => {
     const [liked, setLiked] = useState(false);
-
+    const {id,likes,likesCount}=post;
     const [likePost] = useMutation(LIKE_POST_MUTATION, {
         variables: {
             postId: id,

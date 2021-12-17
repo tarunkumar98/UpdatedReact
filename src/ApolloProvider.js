@@ -9,13 +9,15 @@ import {
 } from "@apollo/client";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { WebSocketLink } from "@apollo/client/link/ws";
+// import { PersistGate } from 'redux-persist/integration/react';
+// import { persistor } from "./redux/store";
 
 const httpLink = createHttpLink({
   uri: "http://localhost:4000/graphql",
 });
 
 const webSocketLink = new WebSocketLink({
-  uri: `ws://localhost:4000/graphql`,
+  uri: "ws://localhost:4000/graphql",
   options: {
     reconnect: true,
     connectionParams: {
@@ -52,7 +54,7 @@ const client = new ApolloClient({
 
 const Provider = () => (
   <ApolloProvider client={client}>
-    <App />
+      <App />
   </ApolloProvider>
 );
 export default Provider;

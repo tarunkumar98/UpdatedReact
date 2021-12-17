@@ -5,13 +5,17 @@ import LikeButton from "./LikeButton";
 import DeleteButton from "./DeleteButton";
 import MyPopup from "./MyPopup";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addPost } from "../redux/postcart/postcart.actions";
+import { selectCurrentUser } from "../redux/user/user.selector";
+import { selectPostCart } from "../redux/postcart/postcart.selectors";
+import SaveButton from "./SaveButton";
 
-const PostCard = ({
-    post: { body, createdAt, id, username, likesCount, commentsCount, likes },
-}) => {
-    const user = useSelector((state) => state.auth.user);
-
+const PostCard = (post) => {
+    const user = useSelector(selectCurrentUser);
+    const dispatch=useDispatch();
+    const { body, createdAt, id, username, likesCount, commentsCount, likes }=post.post;
+    // postcart.map(post=>console.log(post.post.username,user.username))
     return (
         <Card fluid>
             <Card.Content>
@@ -28,7 +32,7 @@ const PostCard = ({
             </Card.Content>
 
             <Card.Content extra>
-                <LikeButton user={user} post={{ id, likes, likesCount }} />
+                <LikeButton user={user} post={post.post} />
                 <MyPopup content="Comment on post">
                     <Button labelPosition="right" as={Link} to={`/posts/${id}`}>
                         <Button color="blue" basic>
@@ -39,6 +43,7 @@ const PostCard = ({
                         </Label>
                     </Button>
                 </MyPopup>
+                <SaveButton user={user} post={post.post}/>
                 {user && user.username === username && (
                     <DeleteButton postId={id} />
                 )}

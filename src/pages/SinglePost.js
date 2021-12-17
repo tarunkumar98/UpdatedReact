@@ -19,9 +19,10 @@ import {
 import LikeButton from "../components/LikeButton";
 import DeleteButton from "../components/DeleteButton";
 import MyPopup from "../components/MyPopup";
+import { selectCurrentUser } from "../redux/user/user.selector";
 
 const SinglePost = (props) => {
-    const user = useSelector((state) => state.auth.user);
+    const user = useSelector(selectCurrentUser);
     const commentInputRef = useRef(null);
     const postId = props.match.params.postId;
     const [comment, setComment] = useState("");

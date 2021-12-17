@@ -7,10 +7,11 @@ import { useMutation } from "@apollo/client";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store/auth-slice";
 import { REGISTER_USER } from "../utils/graphql";
+import { signInSuccess } from "../redux/user/user.actions";
 
 const Register = (props) => {
     const history = useHistory();
-    const dispatchFn = useDispatch();
+    const dispatch= useDispatch();
 
     const [errors, setErrors] = useState({});
 
@@ -29,7 +30,7 @@ const Register = (props) => {
 
     const [addUser, { loading }] = useMutation(REGISTER_USER, {
         update(_, { data: { register: userData } }) {
-            dispatchFn(authActions.login(userData));
+            dispatch(signInSuccess(userData));
             history.push("/");
         },
         onError(err) {

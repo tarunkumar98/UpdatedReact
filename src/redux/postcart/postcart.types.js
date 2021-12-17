@@ -1,0 +1,8 @@
+const postcartActionTypes={
+    TOGGLE_CART_HIDDEN:'TOGGLE_CART_HIDDEN',
+    ADD_POST:'ADD_POST',
+    CLEAR_POST_FROM_POSTCART:'CLEAR_POST_FROM_POSTCART',
+    CLEAR_POSTCART:'CLEAR_POSTCART'
+}
+
+export default postcartActionTypes;

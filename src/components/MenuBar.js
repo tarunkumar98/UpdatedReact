@@ -4,19 +4,21 @@ import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
-import { authActions } from "../store/auth-slice";
+import { signOutStart, signOutSuccess } from "../redux/user/user.actions";
+import { selectCurrentUser } from "../redux/user/user.selector";
+import { togglePostcartHidden } from "../redux/postcart/postcart.actions";
 
 const MenuBar = () => {
   const history = useHistory();
-  const dispatchFn = useDispatch();
-  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+  const user = useSelector(selectCurrentUser);
 
   const pathname = window.location.pathname;
   const path = pathname === "/" ? "home" : pathname.substr(1);
   const [activeItem, setActiveItem] = useState(path);
 
   const logout = () => {
-    dispatchFn(authActions.logout());
+    dispatch(signOutStart());
     history.push("/");
     setActiveItem("home");
   };
@@ -27,6 +29,7 @@ const MenuBar = () => {
     <Menu pointing secondary size="massive" color="teal">
       <Menu.Item name={user.username} as={Link} to="/" />
       <Menu.Menu position="right">
+        <Menu.Item name="Saved Post" onClick={()=>dispatch(togglePostcartHidden())}/>
         <Menu.Item name="logout" onClick={logout} />
       </Menu.Menu>
     </Menu>

@@ -1,18 +1,18 @@
-import { useQuery } from "@apollo/client";
+import { useQuery,useSubscription } from "@apollo/client";
 import { FETCH_POSTS_QUERY, POST_SUBSCRIPTION } from "../utils/graphql";
 import { Grid, Transition } from "semantic-ui-react";
 import PostCard from "../components/PostCard";
 import PostForm from "../components/PostForm";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { selectCurrentUser } from "../redux/user/user.selector";
+import { useApolloClient } from "@apollo/client";
 
 const Home = () => {
     // const client = useApolloClient();
     // const dataGetPosts = client.readQuery({ query: FETCH_POSTS_QUERY });
-    // console.log(dataGetPosts);
-    const user = useSelector((state) => state.auth.user);
-    const { loading, data, subscribeToMore } = useQuery(FETCH_POSTS_QUERY); //, { pollInterval: 5000,}
-
+    const user = useSelector(selectCurrentUser);
+    const { loading, data, subscribeToMore } = useQuery(FETCH_POSTS_QUERY);
     useEffect(() => {
         subscribeToMore({
             document: POST_SUBSCRIPTION,
