@@ -13,25 +13,37 @@ const DeleteButton = ({ commentId, postId, callback }) => {
 
     const mutation = commentId ? DELETE_COMMENT_MUTATION : DELETE_POST_MUTATION;
     const [deleteEntity] = useMutation(mutation, {
-        update(proxy) {
+        update(proxy,result) {
             setConfirmOpen(false);
             if (!commentId) {
-                const data = proxy.readQuery({
-                    query: FETCH_POSTS_QUERY,
-                });
-                let newData = data.getPosts.filter(
-                    (post) => post.id !== postId
-                );
-                proxy.writeQuery({
-                    query: FETCH_POSTS_QUERY,
-                    data: {
-                        ...data,
-                        getPosts: [...newData],
-                    },
-                });
+                // const data = proxy.readQuery({
+                //     query: FETCH_POSTS_QUERY,
+                // });
+                // let newData = data.getPosts.filter(
+                //     (post) => post.id !== postId
+                // );
+                // proxy.writeQuery({
+                //     query: FETCH_POSTS_QUERY,
+                //     data: {
+                //         ...data,
+                //         getPosts: [...newData],
+                //     },
+                // });
+                const deletePostId="Post:"+result.data?.deletePost;
+                proxy.modify({
+                    fields:{
+                        getPosts:(existingPosts)=>{
+                            return existingPosts.filter(postRef=>{
+                                return proxy.identify(postRef)!==deletePostId;
+                            })
+                        }
+                    }
+                })
+                proxy.evict({id:deletePostId})
             }
             if (callback) callback();
         },
+        // refetchQueries:[FETCH_POSTS_QUERY],
         variables: {
             postId,
             commentId,

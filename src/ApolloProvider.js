@@ -6,9 +6,11 @@ import {
   createHttpLink,
   InMemoryCache,
   split,
+  from
 } from "@apollo/client";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { WebSocketLink } from "@apollo/client/link/ws";
+import {RetryLink} from "@apollo/client/link/retry";
 // import { PersistGate } from 'redux-persist/integration/react';
 // import { persistor } from "./redux/store";
 
@@ -38,6 +40,14 @@ const splitLink = split(
   httpLink
 );
 
+const retryLink=new RetryLink({
+  delay:{
+    initial:2000,
+    max:2000,
+    jitter:false
+  }
+})
+
 const authLink = setContext(() => {
   const token = localStorage.getItem("jwtToken");
   return {
@@ -48,8 +58,30 @@ const authLink = setContext(() => {
 });
 
 const client = new ApolloClient({
-  link: authLink.concat(splitLink),
-  cache: new InMemoryCache(),
+  link: from([authLink.concat(splitLink),retryLink]),
+  cache: new InMemoryCache({
+    typePolicies:{
+      Query:{
+        fields:{
+          getPosts:{
+            keyArgs:[],
+            merge:(existingPosts=[],incomingPosts)=>{
+              return[...existingPosts,...incomingPosts]
+            }
+          },
+          getPost:{
+            read:(existingCcheValue,helpers)=>{
+              const queriedPostId=helpers.args.id;
+              return helpers.toReference({
+                id:queriedPostId,
+                __typename:"Post"
+              })
+            }
+          }
+        }
+      }
+    }
+  }),
 });
 
 const Provider = () => (

@@ -9,24 +9,33 @@ const PostForm = () => {
         body: "",
     });
 
+    // const [createPost, { error }] = useMutation(CREATE_POST_MUTATION, {
+    //     variables: {
+    //         createPostBody: values.body,
+    //     },
+    //     update(proxy, result) {
+    //         const data = proxy.readQuery({ query: FETCH_POSTS_QUERY });
+    //         proxy.writeQuery({
+    //             query: FETCH_POSTS_QUERY,
+    //             data: {
+    //                 getPosts: [result.data.createPost, ...data.getPosts],
+    //             },
+    //         });
+    //         values.body = "";
+    //     },
+    //     onError(err) {
+    //         console.log(err);
+    //     },
+    // });
     const [createPost, { error }] = useMutation(CREATE_POST_MUTATION, {
         variables: {
             createPostBody: values.body,
-        },
-        update(proxy, result) {
-            const data = proxy.readQuery({ query: FETCH_POSTS_QUERY });
-            proxy.writeQuery({
-                query: FETCH_POSTS_QUERY,
-                data: {
-                    getPosts: [result.data.createPost, ...data.getPosts],
-                },
-            });
-            values.body = "";
         },
         onError(err) {
             console.log(err);
         },
     });
+
 
     function createPostCallback() {
         createPost();

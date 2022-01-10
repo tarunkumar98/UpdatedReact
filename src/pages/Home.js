@@ -1,6 +1,6 @@
 import { useQuery,useSubscription } from "@apollo/client";
 import { FETCH_POSTS_QUERY, POST_SUBSCRIPTION } from "../utils/graphql";
-import { Grid, Transition } from "semantic-ui-react";
+import { Button, Grid, Transition } from "semantic-ui-react";
 import PostCard from "../components/PostCard";
 import PostForm from "../components/PostForm";
 import { useSelector } from "react-redux";
@@ -12,7 +12,12 @@ const Home = () => {
     // const client = useApolloClient();
     // const dataGetPosts = client.readQuery({ query: FETCH_POSTS_QUERY });
     const user = useSelector(selectCurrentUser);
-    const { loading, data, subscribeToMore } = useQuery(FETCH_POSTS_QUERY);
+    const { loading, data, subscribeToMore ,fetchMore} = useQuery(FETCH_POSTS_QUERY,{
+        variables:{
+            offset:0,
+            limit:6
+        }
+    });
     useEffect(() => {
         subscribeToMore({
             document: POST_SUBSCRIPTION,
@@ -59,6 +64,7 @@ const Home = () => {
                         ))}
                 </Transition.Group>
             </Grid.Row>
+            <Button onClick={()=>fetchMore({variables:{offset:0,limit:data.getPosts.length+6}})}>Fetchmore</Button>
         </Grid>
     );
 };

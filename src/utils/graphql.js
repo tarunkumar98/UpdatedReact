@@ -1,25 +1,27 @@
 import { gql } from "@apollo/client";
 
 export const FETCH_POSTS_QUERY = gql`
-    {
-        getPosts {
-            id
-            body
-            createdAt
-            username
-            likesCount
-            likes {
-                username
-            }
-            commentsCount
-            comments {
-                id
-                username
-                createdAt
-                body
-            }
-        }
+query Query($offset: Int!, $limit: Int!) {
+    getPosts(offset: $offset, limit: $limit) {
+      id
+      body
+      createdAt
+      username
+      comments {
+        id
+        createdAt
+        username
+        body
+      }
+      commentsCount
+      likesCount
+      likes {
+        id
+        username
+        createdAt
+      }
     }
+  }
 `;
 
 export const POST_SUBSCRIPTION = gql`
